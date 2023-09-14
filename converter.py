@@ -1,8 +1,6 @@
 from PIL import Image
 
 from unit import Unit
-import subprocess
-import c7_image
 def process_image(image, selfwidth=800, selfheight=480):
     # Crop the image to the specified width and height
     image = rotate_to_portrait(image)
@@ -12,21 +10,7 @@ def process_image(image, selfwidth=800, selfheight=480):
     image = resize_and_crop(image, selfwidth, selfheight)
     
     image.save('./temp.jpg', format='JPEG', quality=100)
-    image.save('./temp.bmp', format='BMP', quality=100)
-    # Rotate the image to portrait mode
-    compile_command = "g++ converterTo7color.cpp -o converterTo7color"
-    compile_process = subprocess.Popen(compile_command, shell=True)
-    compile_process.wait()
 
-    # 检查编译是否成功
-    if compile_process.returncode == 0:
-        # 运行生成的可执行文件
-        run_command = "./converterTo7color temp.bmp"
-        run_process = subprocess.Popen(run_command, shell=True)
-        run_process.wait()
-    else:
-        print("Compilation failed.")
-    # Create a pallette with the 7 colors supported by the panel
     pal_image = Image.new("P", (1, 1))
 
     pal_image.putpalette((0, 0, 0,
