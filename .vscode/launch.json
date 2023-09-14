@@ -1,0 +1,13 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "C/C++ Runner: Debug Session",
+      "type": "lldb",
+      "request": "launch",
+      "args": [],
+      "cwd": "/Users/lazyman/Desktop/My_Projects/电子相册/web-server",
+      "program": "/Users/lazyman/Desktop/My_Projects/电子相册/web-server/build/Debug/outDebug"
+    }
+  ]
+}
