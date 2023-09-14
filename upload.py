@@ -4,8 +4,8 @@ from werkzeug.datastructures import FileStorage
 
 import os
 
-# app = Flask(__name__)
-# api = Api(app)
+from unit import Unit
+
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # 允许的图片文件扩展名
@@ -40,7 +40,6 @@ def configure_upload(app):
         return render_template('upload.html')
 
 class FileUpload(Resource):
-    
     def post(self):
         parser = reqparse.RequestParser()
         parser.add_argument('file', type=FileStorage, location='files')
@@ -48,7 +47,7 @@ class FileUpload(Resource):
         uploaded_file = args['file']
 
         if uploaded_file:
-            filename = os.path.join('uploads', uploaded_file.filename)
+            filename = os.path.join(Unit.app.config['UPLOAD_FOLDER'], uploaded_file.filename)
             uploaded_file.save(filename)
             return {'message': 'File uploaded successfully', 'filename': filename}
         else:
