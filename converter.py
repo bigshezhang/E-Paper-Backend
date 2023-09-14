@@ -1,4 +1,7 @@
 from PIL import Image
+
+from unit import Unit
+
 def process_image(image, selfwidth=800, selfheight=480):
     # Crop the image to the specified width and height
     image = rotate_to_portrait(image)
@@ -6,6 +9,8 @@ def process_image(image, selfwidth=800, selfheight=480):
     # image.thumbnail((selfwidth, selfheight))
 
     image = resize_and_crop(image, selfwidth, selfheight)
+    
+    image.save('./temp.jpg', format='JPEG', quality=100)
 
     # Rotate the image to portrait mode
     
@@ -24,7 +29,7 @@ def process_image(image, selfwidth=800, selfheight=480):
     # pal_image.putpalette( (16,14,27,  169,164,155,  19,30,19,   21,15,50,  122,41,37,  156,127,56, 128,67,54) + (0,0,0)*249)
     # Convert the source image to the 7 colors, dithering if needed
     image_7color = image.convert("RGB").quantize(palette=pal_image)
-
+    
     return image_7color
 
 def resize_and_crop(image, width, height):
@@ -78,18 +83,14 @@ def buffImg(image):
         idx += 1
     
     # Convert each byte in buf to a hexadecimal string
-    hex_buf = [hex(byte) for byte in buf]
+    hex_buf = bytes(buf)
     
-    with open('data.txt', 'w') as file:
-        for hex_str in hex_buf:
-            file.write(hex_str + ',')
-
     return hex_buf
 
 
-def process_image(image):
+def image_driver(image):
     # image = Image.open('lp.jpg')
     dithered_image = process_image(image)
-    dithered_image.show()
-    buffImg(dithered_image)
+    Unit.update_time(Unit)
+    return(buffImg(dithered_image)) 
     

@@ -1,7 +1,8 @@
 from flask import Flask, request, render_template, jsonify
 from flask_restful import Api, Resource, reqparse
 from werkzeug.datastructures import FileStorage
-
+from PIL import Image
+from converter import image_driver
 import os
 
 from unit import Unit
@@ -48,7 +49,22 @@ class FileUpload(Resource):
 
         if uploaded_file:
             filename = os.path.join(Unit.app.config['UPLOAD_FOLDER'], uploaded_file.filename)
-            uploaded_file.save(filename)
-            return {'message': 'File uploaded successfully', 'filename': filename}
+            image = Image.open(uploaded_file)
+            image = image.convert('RGB')
+            jpeg_filename = os.path.splitext(filename)[0] + '.jpg'
+            image.save(jpeg_filename, format='JPEG', quality=100)
+            with Image.open(jpeg_filename) as img:
+                # 设置图片质量为85，以控制压缩程度
+                quality = 85
+                # 检查文件大小，如果大于2MB，则继续压缩
+                while os.path.getsize(jpeg_filename) > (2 * 1024 * 1024):  # 2MB
+                    quality = quality - 5
+                    img.save(jpeg_filename, format='JPEG', quality=quality) 
+                    print(os.path.getsize(jpeg_filename))
+            
+            send_img = Image.open(jpeg_filename)
+            Unit.data = image_driver(send_img)
+            
+            return {'message': 'File uploaded successfully', 'filename': jpeg_filename}
         else:
             return {'message': 'No file uploaded'}, 400
