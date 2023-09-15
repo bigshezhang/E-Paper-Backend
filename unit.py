@@ -16,6 +16,9 @@ class Unit:
     # data = [0x00] * 192000
     last_update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     
+    db_filename = 'photos.db'
+
+    
     def update_time(self):
         self.last_update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     

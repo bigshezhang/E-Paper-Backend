@@ -100,8 +100,6 @@ def buffImg(image):
 
 
 def image_driver(image):
-    # image = Image.open('lp.jpg')
     dithered_image = process_image(image)
-    Unit.update_time(Unit)
     return(buffImg(dithered_image)) 
     

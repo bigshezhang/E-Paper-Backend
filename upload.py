@@ -1,12 +1,14 @@
+import sqlite3
 from flask import Flask, request, render_template, jsonify
 from flask_restful import Api, Resource, reqparse
 from werkzeug.datastructures import FileStorage
 from PIL import Image
 from converter import image_driver
 import os
+from datetime import datetime
 
 from unit import Unit
-
+from database import Database
 
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # 允许的图片文件扩展名
@@ -46,7 +48,6 @@ class FileUpload(Resource):
         parser.add_argument('file', type=FileStorage, location='files')
         args = parser.parse_args()
         uploaded_file = args['file']
-
         if uploaded_file:
             filename = os.path.join(Unit.app.config['UPLOAD_FOLDER'], uploaded_file.filename)
             image = Image.open(uploaded_file)
@@ -61,6 +62,9 @@ class FileUpload(Resource):
                     quality = quality - 5
                     img.save(jpeg_filename, format='JPEG', quality=quality) 
                     print(os.path.getsize(jpeg_filename))
+                    
+            parts = uploaded_file.filename.rsplit('.', 1)
+            Database.add_photo(parts[0] + '.jpg')
             
             send_img = Image.open(jpeg_filename)
             Unit.data = image_driver(send_img)
