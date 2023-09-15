@@ -6,8 +6,6 @@ from list_photos import show_uploads, ListUploadedPhotos
 from unit import Unit
 # 配置文件上传
 
-Unit.site_path = 'http://127.0.0.1:5000/'
-
 
 configure_upload(Unit.app)
 show_uploads(Unit.app)
