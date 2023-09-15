@@ -44,31 +44,31 @@ def configure_upload(app):
 
 class FileUpload(Resource):
     def post(self):
-        parser = reqparse.RequestParser()
-        parser.add_argument('file', type=FileStorage, location='files')
-        args = parser.parse_args()
-        uploaded_file = args['file']
-        if uploaded_file:
-            filename = os.path.join(Unit.app.config['UPLOAD_FOLDER'], uploaded_file.filename)
-            image = Image.open(uploaded_file)
-            image = image.convert('RGB')
-            jpeg_filename = os.path.splitext(filename)[0] + '.jpg'
-            image.save(jpeg_filename, format='JPEG', quality=100)
-            with Image.open(jpeg_filename) as img:
-                # 设置图片质量为85，以控制压缩程度
-                quality = 85
-                # 检查文件大小，如果大于2MB，则继续压缩
-                while os.path.getsize(jpeg_filename) > (2 * 1024 * 1024):  # 2MB
-                    quality = quality - 5
-                    img.save(jpeg_filename, format='JPEG', quality=quality) 
-                    print(os.path.getsize(jpeg_filename))
-                    
-            parts = uploaded_file.filename.rsplit('.', 1)
-            Database.add_photo(parts[0] + '.jpg')
-            
-            send_img = Image.open(jpeg_filename)
-            Unit.data = image_driver(send_img)
-            
-            return {'message': 'File uploaded successfully', 'filename': jpeg_filename}
+        uploaded_files = request.files.getlist('file')
+        filenames = []
+
+        for uploaded_file in uploaded_files:
+            if uploaded_file:
+                filename = os.path.join(Unit.app.config['UPLOAD_FOLDER'], uploaded_file.filename)
+                image = Image.open(uploaded_file)
+                image = image.convert('RGB')
+                jpeg_filename = os.path.splitext(filename)[0] + '.jpg'
+                image.save(jpeg_filename, format='JPEG', quality=100)
+                with Image.open(jpeg_filename) as img:
+                    # 设置图片质量为85，以控制压缩程度
+                    quality = 85
+                    # 检查文件大小，如果大于2MB，则继续压缩
+                    while os.path.getsize(jpeg_filename) > (2 * 1024 * 1024):  # 2MB
+                        quality = quality - 5
+                        img.save(jpeg_filename, format='JPEG', quality=quality)
+                        print(os.path.getsize(jpeg_filename))
+
+                parts = uploaded_file.filename.rsplit('.', 1)
+                new_filename = parts[0] + '.jpg'
+                Database.add_photo(new_filename)
+                filenames.append(new_filename)
+
+        if filenames:
+            return {'message': 'Files uploaded successfully', 'filenames': filenames}
         else:
-            return {'message': 'No file uploaded'}, 400
+            return {'message': 'No files uploaded'}, 400
