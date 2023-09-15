@@ -67,7 +67,7 @@ def resize_and_crop(image, width, height):
         bottom = (img_height + new_height) / 2
 
     # Crop and resize the image
-    cropped_resized_image = image.crop((left, top, right, bottom)).resize((width, height), Image.ANTIALIAS)
+    cropped_resized_image = image.crop((left, top, right, bottom)).resize((width, height))
 
     return cropped_resized_image
 
