@@ -1,5 +1,5 @@
 uploads/
-c7_image.py
-converterTo7color
-test.py
-temp.bmp
+__pycache__/
+photos.db
+temp.jpgs
+

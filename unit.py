@@ -11,7 +11,7 @@ class Unit:
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.template_folder = 'templates'
     
-    site_path = 'http://127.0.0.1:5001/'
+    site_path = 'http://10.136.223.100:5001/'
     data = bytes([0x00] * 192000)
     # data = [0x00] * 192000
     last_update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
