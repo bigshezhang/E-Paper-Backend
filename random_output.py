@@ -31,14 +31,14 @@ class RandomOutput:
         
     def default(self):
         self.update_photo_album()
-        print (self.photos_name)
+        # print (self.photos_name)
         if self.photos_name:
             random_filename = random.choice(self.photos_name)
             # print("Random Filename:", random_filename)
             image = Image.open(Unit.UPLOAD_FOLDER + '/' + random_filename)
             # image.show()
             Unit.update_time(Unit)
-            Unit.data = ImageProcess.ImageDriver.image_driver(image)
+            Unit.data = ImageProcess.ImageDriver.image_driver(ImageProcess.ImageDriver, image)
             
 
     def __init__(self):

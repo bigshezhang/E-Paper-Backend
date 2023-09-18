@@ -66,7 +66,7 @@ class FileUpload(Resource):
                 new_filename = parts[0] + '.jpg'
                 
                 jpeg_img = Image.open(jpeg_filename)
-                ImageProcess.ImageDriver.image_driver(self=ImageProcess, image= jpeg_img)
+                ImageProcess.ImageDriver.image_driver(self=ImageProcess.ImageDriver, image = jpeg_img)
                 Database.add_photo(new_filename)
                 filenames.append(new_filename)
 

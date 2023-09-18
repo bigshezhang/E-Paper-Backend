@@ -6,12 +6,11 @@ class ImageProcess:
     class ImageDriver:
         def dither_img(self, image: Image.Image, selfwidth=800, selfheight=480):
         # Crop the image to the specified width and height
-            image = self.rotate_to_portrait(image)
 
             # image.thumbnail((selfwidth, selfheight))
 
-            image = self.resize_and_crop(image, selfwidth, selfheight)
-            
+            image = self.resize_and_crop(image, 480, 800)
+            image = image.convert("RGB")
             image.save('./temp.jpg', format='JPEG', quality=100)
 
             pal_image = Image.new("P", (1, 1))
@@ -40,13 +39,15 @@ class ImageProcess:
             
             pal_image.putpalette((51, 38, 45, 177, 174, 162, 70, 98, 62, 64, 57, 82, 118, 46, 48, 176, 147, 49, 135, 62, 59, 164, 131, 107) + (0,0,0)*248)
 
-
+            image = ImageProcess.ImageRender.add_blur_container(ImageProcess.ImageRender, image)
             # Convert the source image to the 7 colors, dithering if needed
             image_7color = image.convert("RGB").quantize(palette=pal_image)
-        
+            image_7color = self.rotate_to_portrait(image_7color)
+            # image_7color.show()
+
             return image_7color
 
-        def resize_and_crop(self, image: Image.Image, width, height):
+        def resize_and_crop(image: Image.Image, width, height):
             # Calculate the aspect ratio of the target size
             aspect_ratio = width / height
 
@@ -74,7 +75,7 @@ class ImageProcess:
 
             return cropped_resized_image
 
-        def rotate_to_portrait(self, image: Image.Image):
+        def rotate_to_portrait(image: Image.Image):
             # Check if the image is in portrait mode (height > width)
 
             if image.size[1] < image.size[0]:   # if height > width
@@ -102,47 +103,34 @@ class ImageProcess:
             return hex_buf
 
         def image_driver(self, image):
-            dithered_image = self.dither_img(self.add_blur_container(self, image))
-            return(self.buffImg(dithered_image))
+            dithered_image = self.dither_img(self, image)
+            return(self.buffImg(self, dithered_image))
     
     class ImageRender:
         def get_dominant_color(self, pil_img: Image.Image):        
             img = pil_img.copy()
-            img = img.convert("RGBA")
+            img = img.convert("RGB")
             img = img.resize((5, 5), resample=0)
             dominant_color = img.getpixel((2, 2))
             return dominant_color
         
         def add_blur_container(self, image: Image.Image):
-            width = 480
-            height = 800
-            bottom_rect_height = 200
-            padding = 16
-            bottom_rect = Image.new('RGBA', (480, bottom_rect_height))
-            draw = ImageDraw.Draw(bottom_rect)
-            rect_color = (255, 255, 255, 30)  # 白色，30% 透明度
-            border_radius = 16  # 圆角半径
+            width, height = 480, 800
 
-            draw.polygon([(0, 0), (480, 0), (480, bottom_rect_height), (0, bottom_rect_height)],
-                fill=rect_color, outline=None)
+            blur_image = image.copy()
+            blur_image = blur_image.filter(ImageFilter.GaussianBlur(radius=8))
 
-            # 左下角和右下角的圆角
-            draw.pieslice([(0, 0), (2 * border_radius, 2 * border_radius)], 90, 180, fill=rect_color)
-            draw.pieslice([(width - 2 * border_radius, 0), (width, 2 * border_radius)], 0, 90, fill=rect_color)
-            draw.pieslice([(width - 2 * border_radius, bottom_rect_height - 2 * border_radius),
-                        (width, bottom_rect_height)], 270, 0, fill=rect_color)
-            draw.pieslice([(0, bottom_rect_height - 2 * border_radius), (2 * border_radius, bottom_rect_height)],
-                        180, 270, fill=rect_color)
+            mask = Image.new('L', image.size, 255)
+            draw_mask = ImageDraw.Draw(mask)
+            draw_mask.rounded_rectangle(xy=[[16, height - 16 - 200], [width - 16, height - 16]],radius=16,fill=0)
+            # mask.show()
 
-            # 添加 Z 轴高斯模糊
-            blurred_bottom_rect = bottom_rect.filter(ImageFilter.GaussianBlur(radius=5))  # 调整模糊半径
+            draw_blur_outline = ImageDraw.Draw(blur_image)
+            draw_blur_outline.rounded_rectangle(xy=[[16, height - 16 - 200], [width - 16, height - 16]],radius=16,outline= "white", width=4)
 
-            # 创建一个新的图像对象，包括原图像和处理后的底部矩形
-            new_image = Image.new('RGBA', (width, height))
-            new_image.paste(image, (0, 0))
-            new_image.paste(blurred_bottom_rect, (0, height - bottom_rect_height - padding))
+            output = Image.composite(image ,blur_image, mask)
+            # output.show()
+            return output
 
 
-            new_image.show()
-            return new_image
 
