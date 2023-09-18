@@ -104,6 +104,13 @@ class ImageProcess:
 
         def image_driver(self, image):
             dithered_image = self.dither_img(self, image)
+            file_name = './uploads/byte_stream.txt'
+
+            # 以二进制写入模式打开文件
+            with open(file_name, 'wb') as file:
+                # 将比特流写入文件
+                file.write(self.buffImg(self, dithered_image))
+            file.close()
             return(self.buffImg(self, dithered_image))
     
     class ImageRender:
