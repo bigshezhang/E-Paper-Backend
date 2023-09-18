@@ -3,13 +3,12 @@ from flask import Flask, request, render_template, jsonify
 from flask_restful import Api, Resource, reqparse
 from werkzeug.datastructures import FileStorage
 from PIL import Image
-from converter import image_driver
 import os
 from datetime import datetime
 
 from unit import Unit
 from database import Database
-
+from image_process import ImageProcess
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # 允许的图片文件扩展名
 
@@ -62,9 +61,12 @@ class FileUpload(Resource):
                         quality = quality - 5
                         img.save(jpeg_filename, format='JPEG', quality=quality)
                         print(os.path.getsize(jpeg_filename))
-
+                
                 parts = uploaded_file.filename.rsplit('.', 1)
                 new_filename = parts[0] + '.jpg'
+                
+                jpeg_img = Image.open(jpeg_filename)
+                ImageProcess.ImageDriver.image_driver(self=ImageProcess, image= jpeg_img)
                 Database.add_photo(new_filename)
                 filenames.append(new_filename)
 

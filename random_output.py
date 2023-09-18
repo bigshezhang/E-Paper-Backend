@@ -4,7 +4,8 @@ from apscheduler.schedulers.background import BackgroundScheduler
 from PIL import Image
 
 from unit import Unit
-from converter import image_driver
+
+from image_process import ImageProcess
 
 class RandomOutput:
     photos_name = []
@@ -12,7 +13,7 @@ class RandomOutput:
 
         
     def update_photo_album(self):
-        print("更新图片资料中")
+        # print("更新图片资料中")
         conn = sqlite3.connect(Unit.db_filename)
         cursor = conn.cursor()
 
@@ -21,7 +22,7 @@ class RandomOutput:
     # 执行数据库查询
             cursor.execute('SELECT filename FROM images')
             self.photos_name = [row[0] for row in cursor.fetchall()]
-            print(self.photos_name)
+            # print(self.photos_name)
         except sqlite3.Error as e:
             print("SQLite error:", e)
 
@@ -33,11 +34,11 @@ class RandomOutput:
         print (self.photos_name)
         if self.photos_name:
             random_filename = random.choice(self.photos_name)
-            print("Random Filename:", random_filename)
+            # print("Random Filename:", random_filename)
             image = Image.open(Unit.UPLOAD_FOLDER + '/' + random_filename)
             # image.show()
             Unit.update_time(Unit)
-            Unit.data = image_driver(image)
+            Unit.data = ImageProcess.ImageDriver.image_driver(image)
             
 
     def __init__(self):

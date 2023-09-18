@@ -2,4 +2,5 @@ uploads/
 __pycache__/
 photos.db
 temp.jpg
+test.py
 
