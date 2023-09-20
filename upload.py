@@ -8,7 +8,7 @@ from datetime import datetime
 
 from unit import Unit
 from database import Database
-from image_process import ImageProcess
+from image_process import ImageDriver
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # 允许的图片文件扩展名
 
@@ -66,7 +66,7 @@ class FileUpload(Resource):
                 new_filename = parts[0] + '.jpg'
                 
                 jpeg_img = Image.open(jpeg_filename)
-                ImageProcess.ImageDriver.image_driver(self=ImageProcess.ImageDriver, image = jpeg_img)
+                ImageDriver.image_driver(self=ImageDriver, image = jpeg_img)
                 Database.add_photo(new_filename)
                 filenames.append(new_filename)
 

@@ -5,7 +5,7 @@ from PIL import Image
 
 from unit import Unit
 
-from image_process import ImageProcess
+from image_process import ImageDriver
 
 class RandomOutput:
     photos_name = []
@@ -38,7 +38,7 @@ class RandomOutput:
             image = Image.open(Unit.UPLOAD_FOLDER + '/' + random_filename)
             # image.show()
             Unit.update_time(Unit)
-            Unit.data = ImageProcess.ImageDriver.image_driver(ImageProcess.ImageDriver, image)
+            Unit.data = ImageDriver.image_driver(ImageDriver, image)
             
 
     def __init__(self):

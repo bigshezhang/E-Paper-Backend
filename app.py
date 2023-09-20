@@ -1,4 +1,4 @@
-from flask import Flask, send_from_directory
+from flask import send_from_directory
 from display import Display, UpdateTime
 from upload import configure_upload, FileUpload  # 导入upload模块
 

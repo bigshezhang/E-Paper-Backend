@@ -1,8 +1,6 @@
 import os
-from flask import Flask, request, render_template, redirect, url_for
 from flask_restful import Resource, reqparse
 from datetime import datetime
-import json
 import sqlite3
 
 from unit import Unit

@@ -1,6 +1,5 @@
-from flask import Flask, Response, make_response
+from flask import make_response
 from flask_restful import Resource
-from datetime import datetime
 import sys
 from unit import Unit
 class Display(Resource):
