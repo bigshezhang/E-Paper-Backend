@@ -38,14 +38,20 @@ class Database:
 
     def add_photo(filename):
         conn = sqlite3.connect(Unit.db_filename)
-        upload_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-
         cursor = conn.cursor()
-        cursor.execute('''
-            INSERT INTO images (filename, upload_time, description)
-            VALUES (?, ?, ?)
-        ''', (filename, upload_time, ''))
-        conn.commit()
+        cursor.execute(
+            'SELECT * FROM images WHERE filename = ?', (filename,))
+        photo = cursor.fetchone()
+        if photo == None:
+            upload_time = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+            cursor = conn.cursor()
+            cursor.execute('''
+                INSERT INTO images (filename, upload_time, description)
+                VALUES (?, ?, ?)
+            ''', (filename, upload_time, ''))
+            conn.commit()
+        else:
+            raise Exception("Already had the same photo")
         conn.close()
 
     class GetPhotoByFilename(Resource):
@@ -148,7 +154,7 @@ class Database:
                 return {"success": False, "error": str(e)}
 
         def update_photo_description(self, filename, new_description):
-            conn = sqlite3.connect(Unit.db_filename)  # 请替换成你的数据库文件路径
+            conn = sqlite3.connect(Unit.db_filename) 
             cursor = conn.cursor()
 
             # 执行更新操作
@@ -173,13 +179,13 @@ class Database:
         def delete_photo(self, filename):
             # 删除本地存储的照片文件
             photo_path = os.path.join(
-                Unit.UPLOAD_FOLDER, str(filename))  # 替换成你的照片存储路径
+                Unit.UPLOAD_FOLDER, str(filename)) 
             try:
                 os.remove(photo_path)
             except Exception as e:
                 raise Exception("Failed to delete file: " + str(e))
 
-            conn = sqlite3.connect(Unit.db_filename)  # 替换成你的数据库文件路径
+            conn = sqlite3.connect(Unit.db_filename) 
             cursor = conn.cursor()
 
             try:
