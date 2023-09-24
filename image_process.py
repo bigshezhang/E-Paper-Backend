@@ -85,7 +85,7 @@ class ImageDriver:
         with open(file_name, 'wb') as file:
             file.write(self.buffImg(self, dithered_image))
         file.close()
-        dithered_image.show()
+        # dithered_image.show()
         return(self.buffImg(self, dithered_image))
 
 class ImageRender:
