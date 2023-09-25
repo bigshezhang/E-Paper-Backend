@@ -5,15 +5,17 @@ from dotenv import load_dotenv
 import os
 
 from mqtt_server import MqttServer
+from flask_cors import CORS
 
 class Unit:
-    def __init__(self):
-        load_dotenv()
-        self.site_path = os.getenv("SITE_PATH")
+    load_dotenv()
+    site_path = os.getenv("SITE_PATH")
     
     mqttServer = MqttServer()
     app = Flask(__name__)
     api = Api(app)
+    CORS(app, resources={r"/api/*": {"origins": "*"}})
+    CORS(app, resources={r"/uploads/*": {"origins": "*"}})
     UPLOAD_FOLDER = 'uploads'
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.template_folder = 'templates'
