@@ -85,6 +85,7 @@ class ImageDriver:
         with open(file_name, 'wb') as file:
             file.write(self.buffImg(self, dithered_image))
         file.close()
+        Unit.mqttServer.publish_file()
         # dithered_image.show()
         return(self.buffImg(self, dithered_image))
 
