@@ -6,40 +6,14 @@ from PIL import Image
 import os
 from datetime import datetime
 
-from unit import Unit
-from database import Database
-from image_process import ImageDriver
+from common.unit import Unit
+from network.database import Database
+from image_process.image_process import ImageDriver
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # 允许的图片文件扩展名
 
 def allowed_file(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-
-def configure_upload(app):
-    # 添加一个路由来处理文件上传
-    @app.route('/upload', methods=['GET', 'POST'])
-    def upload_file():
-        if request.method == 'POST':
-            # 检查是否有文件被上传
-            if 'file' not in request.files:
-                return 'No file part'
-            
-            file = request.files['file']
-
-            # 如果用户未选择文件，浏览器会发送一个空文件
-            if file.filename == '':
-                return 'No selected file'
-            
-            if allowed_file(file.filename) == False:
-                return '请上传图片文件'
-            
-            # 如果文件存在，保存它
-            if file:
-                filename = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
-                file.save(filename)
-                return 'File uploaded successfully'
-
-        return render_template('upload.html')
 
 class FileUpload(Resource):
     def post(self):

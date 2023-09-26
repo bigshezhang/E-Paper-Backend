@@ -1,7 +1,7 @@
 from flask import make_response
 from flask_restful import Resource
 import sys
-from unit import Unit
+from common.unit import Unit
 class Display(Resource):
     def get(self):
         byte_stream = Unit.data
@@ -16,5 +16,4 @@ class UpdateTime(Resource):
         response_data = {
             'time': Unit.last_update_time
         }
-
         return response_data

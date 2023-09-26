@@ -1,6 +1,6 @@
 from PIL import Image, ImageFilter, ImageEnhance, ImageDraw, ImageFont
 
-from unit import Unit
+from common.unit import Unit
 
 class ImageDriver:     
     def dither_img(self, image: Image.Image, selfwidth=800, selfheight=480):
@@ -163,7 +163,7 @@ class ImageRender:
     def add_description_text(self, image:Image.Image):
         # 在图片底部高为 200px, 左右 padding 为 16 px 的框中进行渲染
         draw_description = ImageDraw.Draw(image)
-        draw_description.multiline_text(xy= [40, 600], text= "你好呀，有何贵干！",fill=self.get_addon_color(image),font=ImageFont.truetype('pingfang.ttf',size=18))
+        draw_description.multiline_text(xy= [40, 600], text= "你好呀，有何贵干！",fill=self.get_addon_color(image),font=ImageFont.truetype('./src/pingfang.ttf',size=18))
         return image
         
 

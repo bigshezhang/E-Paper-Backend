@@ -4,13 +4,13 @@ from flask_restful import Api
 from dotenv import load_dotenv
 import os
 
-from mqtt_server import MqttServer
+from network.mqtt_server import MqttServer
 from flask_cors import CORS
 
 class Unit:
     load_dotenv()
     site_path = os.getenv("SITE_PATH")
-    
+    working_path = ''
     mqttServer = MqttServer()
     app = Flask(__name__)
     api = Api(app)

@@ -1,13 +1,16 @@
 from flask import send_from_directory
-from display import Display, UpdateTime
-from upload import configure_upload, FileUpload  # 导入upload模块
+from network.display import Display, UpdateTime
+from network.upload import FileUpload  # 导入upload模块
 import threading
-
-from unit import Unit
-from database import Database
-from random_output import RandomOutput
-from mqtt_server import MqttServer
+import sys
+import os
+from common.unit import Unit
+from network.database import Database
+from common.random_output import RandomOutput
+from network.mqtt_server import MqttServer
 # 配置文件上传
+
+Unit.working_path = os.getcwd()
 
 mqtt_thread = threading.Thread(target=Unit.mqttServer.mqtt_thread)
 mqtt_thread.start()
@@ -18,7 +21,6 @@ def show_uploads(app):
         return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
 
 Database.create_table()
-configure_upload(Unit.app)
 show_uploads(Unit.app)
 
 Unit.api.add_resource(FileUpload, '/api/upload')

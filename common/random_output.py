@@ -3,15 +3,14 @@ import random
 from apscheduler.schedulers.background import BackgroundScheduler
 from PIL import Image
 
-from unit import Unit
+from common.unit import Unit
 
-from image_process import ImageDriver
+from image_process.image_process import ImageDriver
 
 class RandomOutput:
     photos_name = []
     random_output_scheduler = BackgroundScheduler()
-
-        
+   
     def update_photo_album(self):
         # print("更新图片资料中")
         conn = sqlite3.connect(Unit.db_filename)

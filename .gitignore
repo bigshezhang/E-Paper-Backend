@@ -1,4 +1,5 @@
 uploads/
+./.vscode
 __pycache__/
 photos.db
 temp.jpg
