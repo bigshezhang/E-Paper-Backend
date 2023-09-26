@@ -42,7 +42,8 @@ class RandomOutput:
             
 
     def __init__(self):
-        self.random_output_scheduler.add_job(self.default, 'interval', seconds = 10)
+        self.default()
+        self.random_output_scheduler.add_job(self.default, 'interval', seconds = 1)
         self.random_output_scheduler.start()
         print("定时器已启动")
         

@@ -8,14 +8,14 @@ class ImageDriver:
         image.save('./temp.jpg', format='JPEG', quality=100)
         pal_image = Image.new("P", (1, 1))
 
-        # pal_image.putpalette((0, 0, 0,
-        # 255, 255, 255,
-        # 67, 138, 28,
-        # 50, 43, 88,
-        # 191, 0, 0,
-        # 255, 243, 56,
-        # 232, 126, 0,
-        # 194 ,164 , 244)+ (0,0,0)*248)
+        pal_image.putpalette((0, 0, 0,
+        255, 255, 255,
+        67, 138, 28,
+        50, 43, 88,
+        191, 0, 0,
+        255, 243, 56,
+        232, 126, 0,
+        194 ,164 , 244)+ (0,0,0)*248)
 
         # pal_image.putpalette( (20, 28, 45,  152, 166, 147, 26, 94, 54, 32, 53, 90,  112, 43, 50,  176, 167, 29, 107, 61, 54) + (0,0,0)*249)
         # pal_image.putpalette( (30, 31, 26,  185, 199, 147, 51, 111, 26, 50, 62, 66,  130, 50, 25,  188, 179, 14, 124, 73, 28) + (0,0,0)*249)
@@ -26,7 +26,7 @@ class ImageDriver:
             
         #last
         # pal_image.putpalette( (34, 25, 48,  184, 170, 165,  49, 82, 63,   51, 44, 89,  128, 32, 55,  178, 146, 52,  141, 54,65, 170, 132, 114) + (0,0,0)*248)
-        pal_image.putpalette((45, 57, 77, 185, 200, 182, 55, 115, 87, 60, 86, 125, 54, 78, 120, 168, 165, 66,  97, 46, 43, 131, 123, 89) + (0,0,0)*248)
+        # pal_image.putpalette((45, 57, 77, 185, 200, 182, 55, 115, 87, 60, 86, 125, 54, 78, 120, 168, 165, 66,  97, 46, 43, 131, 123, 89) + (0,0,0)*248)
 
         # pal_image.putpalette((51, 38, 45, 177, 174, 162, 70, 98, 62, 64, 57, 82, 118, 46, 48, 176, 147, 49, 135, 62, 59, 164, 131, 107) + (0,0,0)*248)
         image_7color = image.convert("RGB").quantize(palette=pal_image)
@@ -81,10 +81,17 @@ class ImageDriver:
         image = ImageRender.add_description_text(ImageRender, image)
 
         dithered_image = self.dither_img(self, image)
+
         file_name = './uploads/byte_stream.txt'
         with open(file_name, 'wb') as file:
             file.write(self.buffImg(self, dithered_image))
         file.close()
+
+        file_name = './uploads/currently_showing.jpg'
+        img = dithered_image.convert("RGB")
+        img = img.transpose(Image.Transpose.ROTATE_90)
+        img.save(file_name)
+        
         Unit.mqttServer.publish_file()
         # dithered_image.show()
         return(self.buffImg(self, dithered_image))

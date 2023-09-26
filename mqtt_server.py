@@ -38,6 +38,11 @@ class MqttServer:
         with open("./uploads/byte_stream.txt", "rb") as file:
             print("MQTT 更新中")
             data = file.read()
+            # for i in range(1, 101):
+            #     print(i, "->")
+            #     data_chunk = bytes([i]) + data[(i-1) * 1920: i * 1920]
+            #     self.client.publish("lazys_epaper_byte_stream", payload=data_chunk, qos=2, retain=False)
+
             self.client.publish("lazys_epaper_byte_stream", payload=data, qos=2, retain=False)
         
     def on_connect(client, userdata, flags, rc):
