@@ -1,11 +1,12 @@
 from flask import send_from_directory
+from common.database import Database
 from network.display import Display, UpdateTime
 from network.upload import FileUpload  # 导入upload模块
 import threading
 import sys
 import os
 from common.unit import Unit
-from network.database import Database
+from network.photo_api import PhotoApi
 from common.random_output import RandomOutput
 from network.mqtt_server import MqttServer
 # 配置文件上传
@@ -26,10 +27,10 @@ show_uploads(Unit.app)
 Unit.api.add_resource(FileUpload, '/api/upload')
 Unit.api.add_resource(Display, '/api/display')
 Unit.api.add_resource(UpdateTime, '/api/updatetime')
-Unit.api.add_resource(Database.GetPhotoByFilename, '/api/get_photo_by_filename/<string:filename>')
-Unit.api.add_resource(Database.UpdatePhotoDescription, '/api/update_photo_description')
-Unit.api.add_resource(Database.DeletePhoto, '/api/delete_photo')
-Unit.api.add_resource(Database.ListPhotos,'/api/photos')
+Unit.api.add_resource(PhotoApi.GetPhotoByFilename, '/api/get_photo_by_filename/<string:filename>')
+Unit.api.add_resource(PhotoApi.UpdatePhotoDescription, '/api/update_photo_description')
+Unit.api.add_resource(PhotoApi.DeletePhoto, '/api/delete_photo')
+Unit.api.add_resource(PhotoApi.ListPhotos,'/api/photos')
 
 if __name__ == '__main__':
     RandomOutput()

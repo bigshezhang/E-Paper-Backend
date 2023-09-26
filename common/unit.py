@@ -20,7 +20,6 @@ class Unit:
     app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
     app.template_folder = 'templates'
     
-    data = bytes([0x00] * 192000)
     # data = [0x00] * 192000
     last_update_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     

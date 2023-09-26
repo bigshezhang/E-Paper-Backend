@@ -2,10 +2,11 @@ import sqlite3
 import random
 from apscheduler.schedulers.background import BackgroundScheduler
 from PIL import Image
+from common.database import Database
 
 from common.unit import Unit
 
-from image_process.image_process import ImageDriver
+from image_process.image_driver import ImageDriver
 
 class RandomOutput:
     photos_name = []
@@ -37,7 +38,7 @@ class RandomOutput:
             image = Image.open(Unit.UPLOAD_FOLDER + '/' + random_filename)
             # image.show()
             Unit.update_time(Unit)
-            Unit.data = ImageDriver.image_driver(ImageDriver, image)
+            ImageDriver.publish_image(ImageDriver, image, random_filename)
             
 
     def __init__(self):

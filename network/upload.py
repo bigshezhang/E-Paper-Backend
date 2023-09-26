@@ -7,8 +7,8 @@ import os
 from datetime import datetime
 
 from common.unit import Unit
-from network.database import Database
-from image_process.image_process import ImageDriver
+from network.photo_api import PhotoApi
+from image_process.image_driver import ImageDriver
 
 ALLOWED_EXTENSIONS = {'png', 'jpg', 'jpeg', 'gif'}  # 允许的图片文件扩展名
 
@@ -41,7 +41,7 @@ class FileUpload(Resource):
                 
                 jpeg_img = Image.open(jpeg_filename)
                 ImageDriver.image_driver(self=ImageDriver, image = jpeg_img)
-                Database.add_photo(new_filename)
+                PhotoApi.add_photo(new_filename)
                 filenames.append(new_filename)
 
         if filenames:
