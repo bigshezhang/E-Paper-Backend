@@ -80,16 +80,24 @@ class ImageDriver:
         image = DescriptionRender.add_blur_container(DescriptionRender, image)
         image = DescriptionRender.add_description_text(DescriptionRender, image, Database.get_photo_description(Database, filename))
         dithered_image = self.dither_img(self, image)
+        dithered_image = dithered_image.transpose(Image.Transpose.ROTATE_270)
         return(self.buffImg(self, dithered_image))
     
     def publish_image(self, image, filename):
+        Unit.update_time(Unit)
+        image = self.resize_and_crop(image, 480, 800)
+        image = DescriptionRender.add_blur_container(DescriptionRender, image)
+        image = DescriptionRender.add_description_text(DescriptionRender, image, Database.get_photo_description(Database, filename))
+        dithered_image = self.dither_img(self, image)
+        
         bytes_file_name = './uploads/byte_stream.txt'
         with open(bytes_file_name, 'wb') as file:
-            file.write(self.image_driver(self, image, filename))
+            bytes_image = dithered_image.transpose(Image.Transpose.ROTATE_270)
+            file.write(self.buffImg(self, bytes_image))
         file.close()
 
         pic_file_name = './uploads/currently_showing.jpg'
         img = image.convert("RGB")
-        img = img.transpose(Image.Transpose.ROTATE_90)
+
         img.save(pic_file_name)
         Unit.mqttServer.publish_file()

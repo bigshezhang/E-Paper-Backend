@@ -19,10 +19,10 @@ mqtt_thread.start()
 def show_uploads(app):
     @app.route('/uploads/<path:filename>')
     def uploaded_file(filename):
-        return send_from_directory(app.config['UPLOAD_FOLDER'], filename)
+        return send_from_directory(os.path.dirname(app.root_path) + '/uploads', filename)
 
-Database.create_table()
 show_uploads(Unit.app)
+Database.create_table()
 
 Unit.api.add_resource(FileUpload, '/api/upload')
 Unit.api.add_resource(Display, '/api/display')

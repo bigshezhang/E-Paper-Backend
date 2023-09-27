@@ -19,8 +19,8 @@ class PhotoApi:
         photo_list = []
         def get(self):
             try:
-                Database.list_photos()
-                return Database.list_photos()
+                Database.list_photos(Database)
+                return Database.list_photos(Database)
             except sqlite3.Error as e:
                 return {
                     "success": False

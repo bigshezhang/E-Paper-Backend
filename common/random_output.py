@@ -34,10 +34,7 @@ class RandomOutput:
         # print (self.photos_name)
         if self.photos_name:
             random_filename = random.choice(self.photos_name)
-            # print("Random Filename:", random_filename)
             image = Image.open(Unit.UPLOAD_FOLDER + '/' + random_filename)
-            # image.show()
-            Unit.update_time(Unit)
             ImageDriver.publish_image(ImageDriver, image, random_filename)
             
 
